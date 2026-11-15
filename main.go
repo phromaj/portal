@@ -12,6 +12,7 @@ import (
 	"encoding/json"
 	"html/template"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"sync"
@@ -308,11 +309,15 @@ func allStatus() map[string]status {
 	return m
 }
 
-func main() {
+func listenAddress() string {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "3000"
 	}
+	return net.JoinHostPort(os.Getenv("HOST"), port)
+}
+
+func main() {
 	var err error
 	if groups, err = loadGroups(os.Getenv("PORTAL_CONFIG")); err != nil {
 		log.Fatalf("PORTAL_CONFIG: %v", err)
@@ -360,11 +365,11 @@ func main() {
 	})
 
 	srv := &http.Server{
-		Addr:              ":" + port,
+		Addr:              listenAddress(),
 		Handler:           secure(mux),
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 
-	log.Printf("portal listening on :%s", port)
+	log.Printf("portal listening on %s", srv.Addr)
 	log.Fatal(srv.ListenAndServe())
 }

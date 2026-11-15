@@ -4,8 +4,10 @@ A homelab start page: links grouped by section, live status dots, a
 command palette (Cmd+K or `/`). Go standard library only.
 
 ```sh
-PORTAL_CONFIG=links.json PORT=3000 portal
+PORTAL_CONFIG=links.json HOST=127.0.0.1 PORT=3000 portal
 ```
+
+`HOST` defaults to all interfaces; `PORT` defaults to `3000`.
 
 `links.json`:
 
